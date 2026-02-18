@@ -4,29 +4,28 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
-    private final JavaMailSenderImpl mailSender;
-    private JavaMailSender javaMailSender;
 
-    @Value("${spring.mail.properties.mail.smpt.from}")
+    private final JavaMailSender mailSender;
+
+    @Value("${spring.mail.properties.mail.smtp.from}")
     private String fromEmail;
 
-    public void sendEmail(String to , String  subject , String body){
-       try {
-           SimpleMailMessage message = new SimpleMailMessage();
-           message.setFrom(fromEmail);
-           message.setTo(to);
-           message.setSubject(subject);
-           message.setText(body);
-           mailSender.send(message);
-       } catch (Exception e) {
-           throw new RuntimeException(e.getMessage());
-       }
-
+    public void sendEmail(String to, String subject, String body) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(body);
+            mailSender.send(message);
+        } catch (Exception e) {
+            // Log only, DO NOT break registration
+            System.out.println("Email sending failed: " + e.getMessage());
+        }
     }
 }

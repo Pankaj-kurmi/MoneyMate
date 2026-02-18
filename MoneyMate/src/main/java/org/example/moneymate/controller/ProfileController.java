@@ -1,15 +1,18 @@
 package org.example.moneymate.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.moneymate.dto.AuthDTO;
 import org.example.moneymate.dto.ProfileDTO;
 import org.example.moneymate.service.ProfileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
-
+@RequestMapping
 public class ProfileController {
     private final ProfileService profileService;
 
@@ -28,4 +31,25 @@ public class ProfileController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Activation token not found or already used ");
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String,Object>> login(@RequestBody AuthDTO authDTO){
+        try {
+            if (!profileService.isAccountActive(authDTO.getEmail())){
+                Map.of(
+                        "message" , "Account is not active.Please activate your account first"
+                );
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            }
+           Map<String,Object> response =profileService.authenticateAndGenerateToken(authDTO);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                    "message" ,e.getMessage()
+            ));
+
+        }
+    }
+
 }
