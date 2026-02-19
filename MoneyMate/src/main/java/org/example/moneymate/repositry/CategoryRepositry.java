@@ -1,14 +1,13 @@
 package org.example.moneymate.repositry;
 
 import org.example.moneymate.entities.CategoryEntity;
-import org.example.moneymate.entities.ProfileEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CategoryRepositry extends JpaRepository<CategoryEntity,Long> {
-   /* // select * from tbl_categories where profile_id = ?1
+public interface CategoryRepositry extends JpaRepository <CategoryEntity, Long>{
+    // select * from tbl_categories where profile_id = ?1
     List<CategoryEntity> findByProfileId(Long profileId);
 
     // select * from tbl_categories where id = ?1 and profile_id = ?2
@@ -19,12 +18,5 @@ public interface CategoryRepositry extends JpaRepository<CategoryEntity,Long> {
 
 
     Boolean existsByNameAndProfileId(String name, Long profileId);
-   boolean existsByNameAndProfileId(String name, Long profileId);
-
-    List<CategoryEntity> findByProfileId(Long profileId);
-    */
-   boolean existsByNameAndProfile(String name, ProfileEntity profile);
-
-    List<CategoryEntity> findByProfile(ProfileEntity profile);
 
 }

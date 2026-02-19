@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -12,12 +14,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 
-public class CategoryDTO {
+public class IncomeDTO {
+
     private Long id;
-    private Long profileId;
     private String name;
     private String icon;
-    private String type;
+    private String categoryName;
+    private Long categoryId;
+    private BigDecimal amount;
+    private LocalDate date;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
 }
+
