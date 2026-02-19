@@ -36,5 +36,13 @@ public interface IncomeRepository extends JpaRepository <IncomeEntity, Long> {
 
     //select * from tbl_incomes where profile_id = ?1 and date between ?2 and ?3
     List<IncomeEntity>findByProfileIdAndDateBetween(Long profileId, LocalDate startDate, LocalDate endDate);
+    @Query("""
+    select coalesce(sum(i.amount), 0)
+    from IncomeEntity i
+    where i.profile.id = :profileId
+      and i.date between :startDate and :endDate
+""")
+    double sumIncomeBetweenDates(Long profileId, LocalDate startDate, LocalDate endDate);
+
 
 }

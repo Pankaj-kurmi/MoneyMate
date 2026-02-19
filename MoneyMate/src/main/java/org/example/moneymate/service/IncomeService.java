@@ -97,4 +97,13 @@ public class IncomeService {
                 .updatedAt(entity.getUpdatedAt())
                 .build();
     }
+
+    public double getTotalForCurrentMonth(Long profileId) {
+        LocalDate now = LocalDate.now();
+        LocalDate startOfMonth = now.withDayOfMonth(1);
+        LocalDate endOfMonth = now.withDayOfMonth(now.lengthOfMonth());
+
+        return incomeRepository.sumIncomeBetweenDates(profileId, startOfMonth, endOfMonth);
+    }
+
 }

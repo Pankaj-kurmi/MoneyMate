@@ -108,5 +108,15 @@ public class ExpenseService {
                 .updatedAt(entity.getUpdatedAt())
                 .build();
     }
+
+    public double getTotalForCurrentMonth(Long profileId) {
+        LocalDate now = LocalDate.now();
+        LocalDate startOfMonth = now.withDayOfMonth(1);
+        LocalDate endOfMonth = now.withDayOfMonth(now.lengthOfMonth());
+
+        return expenseRepository.sumExpensesBetweenDates(profileId, startOfMonth, endOfMonth);
+    }
+    
+
 }
 
