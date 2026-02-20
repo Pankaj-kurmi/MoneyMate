@@ -1,5 +1,7 @@
 package org.example.moneymate.repositry;
 
+import org.example.moneymate.dto.CategoryBreakdownDTO;
+import org.example.moneymate.dto.MonthlySummaryDTO;
 import org.example.moneymate.entities.ExpenseEntity;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -46,5 +48,41 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
     """)
     double sumExpensesBetweenDates(Long profileId, LocalDate startDate, LocalDate endDate);
 
+    // Sum of all EXPENSE (or DEBT) amounts for a profile
+    @Query("""
+        SELECT COALESCE(SUM(e.amount), 0)
+        FROM ExpenseEntity e
+        WHERE e.profile.id = :profileId
+          AND e.category.type = 'EXPENSE'
+    """)
+    double sumTotalDebtByProfileId(@Param("profileId") Long profileId);
+
+    @Query("""
+    SELECT new org.example.moneymate.dto.MonthlySummaryDTO(
+        FUNCTION('DATE_FORMAT', e.createdAt, '%Y-%m'),
+        SUM(CASE WHEN e.category.type = 'INCOME' THEN e.amount ELSE 0 END),
+        SUM(CASE WHEN e.category.type = 'EXPENSE' THEN e.amount ELSE 0 END)
+    )
+    FROM ExpenseEntity e
+    WHERE e.profile.id = :profileId
+    GROUP BY FUNCTION('DATE_FORMAT', e.createdAt, '%Y-%m')
+    ORDER BY FUNCTION('DATE_FORMAT', e.createdAt, '%Y-%m')
+""")
+    List<MonthlySummaryDTO> getMonthlySummary(@Param("profileId") Long profileId);
+
+
+    // 2. Category-wise expense breakdown (only EXPENSE)
+    @Query("""
+        SELECT new org.example.moneymate.dto.CategoryBreakdownDTO(
+            e.category.name,
+            SUM(e.amount)
+        )
+        FROM ExpenseEntity e
+        WHERE e.profile.id = :profileId
+          AND e.category.type = 'EXPENSE'
+        GROUP BY e.category.name
+        ORDER BY SUM(e.amount) DESC
+    """)
+    List<CategoryBreakdownDTO> getCategoryBreakdown(@Param("profileId") Long profileId);
 }
 

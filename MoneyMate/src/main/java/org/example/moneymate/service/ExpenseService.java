@@ -116,7 +116,10 @@ public class ExpenseService {
 
         return expenseRepository.sumExpensesBetweenDates(profileId, startOfMonth, endOfMonth);
     }
-    
 
+
+    public Double getTotalDebt(Long profileId) {
+        return expenseRepository.sumTotalDebtByProfileId(profileId);
+    }
 }
 

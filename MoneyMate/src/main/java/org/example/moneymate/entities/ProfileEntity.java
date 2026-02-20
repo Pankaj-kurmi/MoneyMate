@@ -41,5 +41,8 @@ public class ProfileEntity {
             isActive=false;
         }
     }
+    // ProfileEntity.java
+    @Column(name = "credit_limit")
+    private Double creditLimit;
 
 }
